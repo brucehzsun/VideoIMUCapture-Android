@@ -22,6 +22,7 @@ def convert_to_lth(proto, result_path):
         writer = csv.writer(csvfile)
         writer.writerow(["#frame", "time"])
         writer.writerows(frame_list)
+        print("writer imu csv file")
 
     # Extract IMU data
     imu_list = []
@@ -79,6 +80,7 @@ def convert_to_lth(proto, result_path):
         # Read proto
         proto_path = osp.join(args.data_dir, 'video_meta.pb3')
         with open(proto_path, 'rb') as f:
+            print("open pbf file")
             proto = VideoCaptureData.FromString(f.read())
 
         convert_to_lth(proto, result_dir)
@@ -86,3 +88,4 @@ def convert_to_lth(proto, result_path):
 
         # if args.kalibr:
         #     copy_calib(args.kalibr, result_dir)
+        print("finish.....")
