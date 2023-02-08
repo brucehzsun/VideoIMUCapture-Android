@@ -5,6 +5,7 @@ import os.path as osp
 import os
 import csv
 import shutil
+import numpy as np
 
 def convert_to_lth(proto, result_path):
     video_dir = osp.join(result_path, 'video')
@@ -37,11 +38,30 @@ def convert_to_lth(proto, result_path):
             frame_data.gyro[2],
         ])
 
-        with open(osp.join(video_dir, 'imu.csv'), 'w') as csvfile:
-            writer = csv.writer(csvfile)
-            writer.writerow(["#time", "accel_x", "accel_y", "accel_z", "gyro_x", "gyro_y", "gyro_z"])
-            writer.writerows(imu_list)
+    with open(osp.join(video_dir, 'imu.csv'), 'w') as csvfile:
+        writer = csv.writer(csvfile)
+        writer.writerow(["#time", "accel_x", "accel_y", "accel_z", "gyro_x", "gyro_y", "gyro_z"])
+        writer.writerows(imu_list)
 
+    imu_list = []
+    for i, frame_data in enumerate(proto.imu):
+        gyro_drift = getattr(frame_data, 'gyro_drift', np.zeros(3))
+        accel_bias = getattr(frame_data, 'accel_bias', np.zeros(3))
+
+        imu_list.append([
+            float(frame_data.time_ns),
+            frame_data.accel[0] - accel_bias[0],
+            frame_data.accel[1] - accel_bias[1],
+            frame_data.accel[2] - accel_bias[2],
+            frame_data.gyro[0] - gyro_drift[0],
+            frame_data.gyro[1] - gyro_drift[1],
+            frame_data.gyro[2] - gyro_drift[2],
+        ])
+
+    with open(osp.join(video_dir, 'imu_bias.csv'), 'w') as csvfile:
+        writer = csv.writer(csvfile)
+        writer.writerow(["#time", "accel_x", "accel_y", "accel_z", "gyro_x", "gyro_y", "gyro_z"])
+        writer.writerows(imu_list)
         # Write sync
         # with open(osp.join(video_dir, 'sync.data'), 'w') as f:
         #     yaml.dump({'sync': [{'delay': 0.0}]}, f, Dumper=OpenCVDumper)
