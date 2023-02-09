@@ -172,6 +172,8 @@ if __name__ == "__main__":
         result_dir = osp.join(args.result_dir, sub_path) if args.result_dir else osp.join(root, 'rosbag')
         _makedir(result_dir)
 
+        print("args.raw_imu={}".format(args.raw_imu))
+
         # Read proto
         proto_path = osp.join(root, 'video_meta.pb3')
         with open(proto_path,'rb') as f:
