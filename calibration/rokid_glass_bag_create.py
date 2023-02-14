@@ -31,7 +31,7 @@ def getImageFilesFromDir(data_path: str):
     if os.path.exists(image_dir):
         for file in os.listdir(image_dir):
             if os.path.splitext(file)[1] in ['.bmp', '.png', '.jpg']:
-                image_files.append(file)
+                image_files.append(os.path.join(image_dir,file))
                 timestamps.append(os.path.splitext(file)[0])
             # for f in files:
             #     if os.path.splitext(f)[1] in ['.bmp', '.png', '.jpg']:
