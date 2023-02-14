@@ -107,7 +107,7 @@ def create_bag(data_dir: str):
         # write imu data
         # topics: /cam0/image_raw       msgs: sensor_msgs / Image
         #        /imu0       msgs: sensor_msgs / Imu
-        with open(imu_file, 'rb') as f:
+        with open(imu_file, 'r') as f:
             reader = csv.reader(f, delimiter=',')
             # headers = next(reader, None)
             for row in reader:
